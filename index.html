@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tag der Freiheit</title>
+  <title>Tag der Freiheit 2026</title>
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0d0d0d;
-      --surface:   #161616;
-      --border:    #2a2a2a;
-      --accent:    #e8c96d;
-      --accent2:   #c9a93d;
-      --text:      #f0f0f0;
-      --muted:     #888;
-      --radius:    1rem;
-      --font:      'Segoe UI', system-ui, sans-serif;
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --accent: #e8c96d;
+      --accent2: #c9a93d;
+      --text: #f0f0f0;
+      --muted: #888;
+      --radius: 1rem;
+      --font: 'Segoe UI', system-ui, sans-serif;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font);
@@ -29,6 +27,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
     }
 
     /* ── Hero / Countdown ── */
@@ -40,35 +40,27 @@
       justify-content: center;
       text-align: center;
       padding: 4rem 1.5rem 3rem;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,201,109,.18) 0%, transparent 70%),
-        var(--bg);
-    }
-
-    .hero__eyebrow {
-      font-size: .85rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      opacity: .85;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,201,109,.18) 0%, transparent 70%), var(--bg);
     }
 
     .hero__title {
-      font-size: clamp(2rem, 6vw, 4.5rem);
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: .6rem;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
       background: linear-gradient(135deg, #fff 40%, var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
+      transition: transform 0.2s;
     }
 
+    .hero__title:active { transform: scale(0.95); }
+
     .hero__subtitle {
-      font-size: clamp(.95rem, 2vw, 1.15rem);
+      font-size: 1.1rem;
       color: var(--muted);
-      margin-bottom: 3.5rem;
+      margin: 1rem 0 3rem;
+      height: 1.5rem; /* Platzhalter für Easter-Egg Text */
     }
 
     /* ── Timer Grid ── */
@@ -86,268 +78,190 @@
       border-radius: var(--radius);
       padding: 1.5rem 2rem;
       min-width: 110px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .4rem;
-      box-shadow: 0 4px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.03);
-      transition: border-color .3s;
+      cursor: help;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .timer__unit:hover { border-color: var(--accent2); }
+    .timer__unit:hover { border-color: var(--accent); transform: translateY(-5px); }
 
     .timer__number {
       font-size: clamp(2.5rem, 7vw, 4.5rem);
       font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
       color: var(--accent);
-      letter-spacing: -.02em;
     }
 
     .timer__label {
       font-size: .75rem;
+      text-transform: uppercase;
       letter-spacing: .12em;
-      text-transform: uppercase;
       color: var(--muted);
     }
 
-    .timer__separator {
-      display: flex;
-      align-items: center;
-      padding-bottom: 1.4rem;
-      color: var(--border);
-      font-size: 2rem;
-      font-weight: 300;
-      user-select: none;
+    /* ── Interactive Buttons ── */
+    .btn-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
     }
 
-    /* finished state */
-    .finished-msg {
-      display: none;
-      font-size: clamp(1.4rem, 4vw, 2.5rem);
-      font-weight: 600;
-      color: var(--accent);
-      text-align: center;
-    }
-
-    .hero__target {
-      font-size: .9rem;
+    .btn {
+      background: transparent;
+      border: 1px solid var(--border);
       color: var(--muted);
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
     }
 
-    .hero__target span { color: var(--text); font-weight: 500; }
-
-    /* ── Divider ── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0 1.5rem;
-    }
-
-    /* ── Impressum ── */
-    .impressum {
+    .btn:hover {
       background: var(--surface);
-      padding: 4rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .impressum__inner {
-      max-width: 680px;
-      width: 100%;
-    }
-
-    .impressum__title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
       color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: .6rem;
+      border-color: var(--accent);
     }
 
-    .impressum__title::before {
-      content: '';
-      display: inline-block;
-      width: 4px;
-      height: 1.4em;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-
-    .impressum__section {
-      margin-bottom: 1.8rem;
-    }
-
-    .impressum__section h3 {
-      font-size: .8rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: .5rem;
-    }
-
-    .impressum__section p,
-    .impressum__section address {
-      font-style: normal;
-      line-height: 1.8;
-      color: #bbb;
-      font-size: .95rem;
-    }
-
-    .impressum__section a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .impressum__section a:hover { text-decoration: underline; }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: .8rem;
-      color: var(--muted);
+    /* ── Impressum (Hidden by default) ── */
+    .impressum {
+      display: none;
+      background: var(--surface);
+      padding: 3rem 1.5rem;
       border-top: 1px solid var(--border);
+      animation: slideUp 0.4s ease-out;
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 500px) {
-      .timer__separator { display: none; }
-      .timer__unit { min-width: 80px; padding: 1rem 1.2rem; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .impressum__inner { max-width: 680px; margin: 0 auto; text-align: left; }
+    .impressum__section { margin-bottom: 1.5rem; color: #bbb; font-size: 0.9rem; }
+    .impressum__section h3 { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+
+    /* ── Party Mode ── */
+    .party-mode {
+      animation: disco 0.5s infinite;
     }
+    @keyframes disco {
+      0% { background-color: #440000; }
+      25% { background-color: #004400; }
+      50% { background-color: #000044; }
+      75% { background-color: #444400; }
+      100% { background-color: #0d0d0d; }
+    }
+
+    footer { padding: 1.5rem; text-align: center; font-size: 0.8rem; color: #444; }
+
+    @media (max-width: 500px) { .timer__unit { min-width: 85px; padding: 1rem; } }
   </style>
 </head>
 <body>
 
-  <!-- ════════════════════  HERO  ════════════════════ -->
   <section class="hero">
-    <p class="hero__eyebrow">Noch</p>
-    <h1 class="hero__title">Tag der Freiheit</h1>
-    <p class="hero__subtitle">Die Uhr läuft&nbsp;– der Moment rückt näher.</p>
+    <p class="hero__eyebrow" id="eyebrow">Nur noch...</p>
+    <h1 class="hero__title" id="mainTitle">Tag der Freiheit</h1>
+    <p class="hero__subtitle" id="jokeText">Geduld ist eine Tugend (die wir nicht haben).</p>
 
     <div class="timer" id="timer">
-      <div class="timer__unit">
+      <div class="timer__unit" title="Echt viele Tage...">
         <span class="timer__number" id="days">--</span>
         <span class="timer__label">Tage</span>
       </div>
-      <div class="timer__separator">:</div>
-      <div class="timer__unit">
+      <div class="timer__unit" title="Genug für ein paar Nickerchen.">
         <span class="timer__number" id="hours">--</span>
         <span class="timer__label">Stunden</span>
       </div>
-      <div class="timer__separator">:</div>
-      <div class="timer__unit">
+      <div class="timer__unit" title="Vergehen schneller als man denkt.">
         <span class="timer__number" id="minutes">--</span>
         <span class="timer__label">Minuten</span>
       </div>
-      <div class="timer__separator">:</div>
-      <div class="timer__unit">
+      <div class="timer__unit" id="secondsUnit" title="Klick mich für Party!">
         <span class="timer__number" id="seconds">--</span>
         <span class="timer__label">Sekunden</span>
       </div>
     </div>
 
-    <p class="finished-msg" id="finishedMsg">🎉 Der Tag der Freiheit ist da!</p>
-
-    <p class="hero__target">
-      Zieldatum: <span>23. April 2026, 16:00 Uhr</span>
-    </p>
+    <div class="btn-container">
+        <button class="btn" onclick="toggleImpressum()">Das Kleingedruckte</button>
+        <button class="btn" onclick="areWeThereYet()">Sind wir schon da?</button>
+    </div>
   </section>
 
-  <hr class="divider" />
-
-  <!-- ════════════════════  IMPRESSUM  ════════════════════ -->
-  <section class="impressum" id="impressum">
+  <section class="impressum" id="impressumSection">
     <div class="impressum__inner">
-      <h2 class="impressum__title">Impressum</h2>
-
       <div class="impressum__section">
-        <h3>Angaben gemäß § 5 TMG</h3>
-        <address>
-          Vorname Nachname<br />
-          Musterstraße 1<br />
-          12345 Musterstadt<br />
-          Deutschland
-        </address>
+        <h3>Impressum</h3>
+        <p>Maximilian Krug<br>Bamberg<br>maximilian.krug@fau.de</p>
       </div>
-
       <div class="impressum__section">
-        <h3>Kontakt</h3>
-        <p>
-          Telefon: +49 (0) 000 000000<br />
-          E-Mail: <a href="mailto:beispiel@beispiel.de">beispiel@beispiel.de</a>
-        </p>
-      </div>
-
-      <div class="impressum__section">
-        <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
-        <address>
-          Vorname Nachname<br />
-          Musterstraße 1<br />
-          12345 Musterstadt
-        </address>
-      </div>
-
-      <div class="impressum__section">
-        <h3>Haftungsausschluss</h3>
-        <p>
-          Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt.
-          Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
-          kann jedoch keine Gewähr übernommen werden.
-        </p>
+        <h3>Rechtlicher Kram</h3>
+        <p>Diese Seite dient der Überbrückung von Wartezeit-Traumas. Haftung für schlechte Witze ausgeschlossen.</p>
       </div>
     </div>
   </section>
 
   <footer>
-    &copy; <span id="year"></span> &mdash; Alle Rechte vorbehalten
+    &copy; 2026 — Gebastelt mit viel Kaffee
   </footer>
 
-  <!-- ════════════════════  JAVASCRIPT  ════════════════════ -->
   <script>
-    // Target: 23 April 2026, 16:00 local time
-    const TARGET = new Date(2026, 3, 23, 16, 0, 0);   // month is 0-indexed
+    const TARGET = new Date(2026, 3, 23, 16, 0, 0);
+    const jokes = [
+        "Geduld ist eine Tugend.",
+        "Starr nicht so, davon geht's nicht schneller!",
+        "In der Zwischenzeit könntest du ein neues Hobby lernen.",
+        "Noch mal schlafen? Nein, öfter.",
+        "Fast geschafft! (Spaß, schau auf die Tage)",
+        "Feierabend ist erst, wenn die Uhr auf Null steht."
+    ];
 
-    const $days    = document.getElementById('days');
-    const $hours   = document.getElementById('hours');
-    const $minutes = document.getElementById('minutes');
-    const $seconds = document.getElementById('seconds');
-    const $timer   = document.getElementById('timer');
-    const $done    = document.getElementById('finishedMsg');
-
-    function pad(n) { return String(n).padStart(2, '0'); }
-
+    // ── Timer Logic ──
     function tick() {
-      const now  = new Date();
-      const diff = TARGET - now;
-
+      const diff = TARGET - new Date();
       if (diff <= 0) {
-        $timer.style.display = 'none';
-        $done.style.display  = 'block';
+        document.body.innerHTML = "<h1 style='color:var(--accent); text-align:center; margin-top:20vh;'>FREIHEIT! 🎉</h1>";
         return;
       }
+      const s = Math.floor(diff / 1000) % 60;
+      const m = Math.floor(diff / 60000) % 60;
+      const h = Math.floor(diff / 3600000) % 24;
+      const d = Math.floor(diff / 86400000);
 
-      const totalSecs = Math.floor(diff / 1000);
-      const s = totalSecs % 60;
-      const m = Math.floor(totalSecs / 60) % 60;
-      const h = Math.floor(totalSecs / 3600) % 24;
-      const d = Math.floor(totalSecs / 86400);
+      document.getElementById('days').textContent = d;
+      document.getElementById('hours').textContent = String(h).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+    }
+    setInterval(tick, 1000);
+    tick();
 
-      $days.textContent    = pad(d);
-      $hours.textContent   = pad(h);
-      $minutes.textContent = pad(m);
-      $seconds.textContent = pad(s);
+    // ── Easter Eggs ──
+    
+    // 1. Titel Klick
+    document.getElementById('mainTitle').addEventListener('click', () => {
+        const jokeElem = document.getElementById('jokeText');
+        const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+        jokeElem.textContent = randomJoke;
+        jokeElem.style.color = "var(--accent)";
+    });
+
+    // 2. Party Mode (Sekunden Klick)
+    document.getElementById('secondsUnit').addEventListener('click', () => {
+        document.body.classList.toggle('party-mode');
+        const eyebrow = document.getElementById('eyebrow');
+        eyebrow.textContent = document.body.classList.contains('party-mode') ? "PARTY HARD!" : "Nur noch...";
+    });
+
+    // 3. Sind wir schon da?
+    function areWeThereYet() {
+        alert("Nein. Frag in 5 Minuten nochmal.");
     }
 
-    tick();
-    setInterval(tick, 1000);
-
-    // Footer year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // ── Impressum Toggle ──
+    function toggleImpressum() {
+      const section = document.getElementById('impressumSection');
+      const isHidden = window.getComputedStyle(section).display === 'none';
+      section.style.display = isHidden ? 'block' : 'none';
+      if(isHidden) section.scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
